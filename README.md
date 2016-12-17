@@ -1,4 +1,4 @@
 # PyRender
 
 3D Renderer in Python. Currently a work-in-progress. Functionality is limited for now.<br>
-![alt tag](http://i.imgur.com/4xhckE6.png)
+![alt tag](http://i.imgur.com/A7kQrHq.png)

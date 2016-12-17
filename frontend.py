@@ -3,16 +3,24 @@ import pygame
 global_screen = None
 SCRN_HEIGHT = 480
 SCRN_WIDTH = 640
+global_font = None
+clock = None
 
 def initialise():
-	global global_screen, global_pixels
+	global global_screen, global_font, clock
 	pygame.init()
 	global_screen = pygame.display.set_mode((SCRN_WIDTH, SCRN_HEIGHT))
+	pygame.display.set_caption("PyRender Window")
+	global_font = pygame.font.SysFont("VeraMono.ttf", 15)
+	clock = pygame.time.Clock()
 
 def putpixel(x, y, r, g, b):
 	global global_pixels, global_screen
 	global_screen.fill((r, g, b),((x, y),(1,1)))
 	
+def text(string, x, y, r, g, b):
+	global global_screen, global_font
+	global_screen.blit(global_font.render(string, 1, (r,g,b)), (x, y))
 
 def output_flush():
 	pygame.display.flip()
@@ -22,7 +30,7 @@ def output_clear(r,g,b):
 
 def draw_point(pt):
 	if pt[0] >= 0 and pt[1] >= 0 and int(pt[0]) < SCRN_WIDTH and int(pt[1]) < SCRN_HEIGHT:
-		putpixel(int(pt[0]), int(pt[1]), 0, 150, 0)
+		putpixel(int(pt[0]), int(pt[1]), 255, 255, 255)
 
 def draw_line(x1, y1, x2, y2):
 	# Find distance

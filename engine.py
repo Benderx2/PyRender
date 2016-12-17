@@ -4,26 +4,24 @@ import pygame
 import random
 import math3d as m3d
 import frontend as fnd
-
-clock = pygame.time.Clock()
+import model as mdl
 
 global_eventsq = []
 
-
 class obj_camera(object):
-	pos = [0,0,0]
-	target = [0,0,0]
 	def __init__(self, pos, target):
+		self.pos = [0,0,0]
+		self.target = [0,0,0]
 		self.pos = pos
 		self.target = target
 
 
 class obj_mesh(object):
-	vertices = []
-	pos = [0,0,0]
-	rot = [0,0,0]
-	faces = []
 	def __init__(self, v, pos, rot):
+		self.vertices = []
+		self.pos = [0,0,0]
+		self.rot = [0,0,0]
+		self.faces = []
 		self.vertices = v
 		self.pos = pos
 		self.rot = rot
@@ -31,13 +29,19 @@ class obj_mesh(object):
 		self.faces.append(f)
 
 class obj_event(object):
-	frequency = 0
-	function = 0
-	ncount = 0
 	def __init__(self, freq, func):
+		self.frequency = 0
+		self.function = 0
+		self.ncount = 0
 		self.frequency = freq
 		self.function = func
 		self.ncount = freq
+
+def model_to_mesh(model, pos, rot):
+	mesh = obj_mesh(model.vertices, pos, rot)
+	for f in model.faces:
+		mesh.add_face(f)
+	return mesh
 
 def render3d(camera, meshes):
 	fnd.output_clear(0,0,0)
@@ -54,7 +58,7 @@ def render3d(camera, meshes):
 			fnd.draw_efficient_line(int(ptA[0]), int(ptA[1]), int(ptB[0]), int(ptB[1]))
 			fnd.draw_efficient_line(int(ptB[0]), int(ptB[1]), int(ptC[0]), int(ptC[1]))
 			fnd.draw_efficient_line(int(ptC[0]), int(ptC[1]), int(ptA[0]), int(ptA[1]))
-
+	fnd.text(str(int(fnd.clock.get_fps())), 0, 0, 255, 255, 0)
 	fnd.output_flush()
 
 def add_event(frequency, func):
@@ -77,27 +81,7 @@ def events(eventseq):
 def main_loop():
 	global global_screen
 	done = False
-	sample_mesh = obj_mesh([[-1,1,1], 
-							[1,1,1],
-							[-1,-1,1],
-							[1,-1,1],
-							[-1,1,-1],
-							[1,1,-1],
-							[1,-1,-1],
-							[-1,-1,-1]], [0,0,0], [0,0,0])
-	
-	sample_mesh.add_face([0,1,2])
-	sample_mesh.add_face([1,2,3])
-	sample_mesh.add_face([1,3,6])
-	sample_mesh.add_face([1,5,6])
-	sample_mesh.add_face([0,1,4])
-	sample_mesh.add_face([1,4,5])
-	sample_mesh.add_face([2,3,7])
-	sample_mesh.add_face([3,6,7])
-	sample_mesh.add_face([0,2,7])
-	sample_mesh.add_face([0,4,7])
-	sample_mesh.add_face([4,5,6])
-	sample_mesh.add_face([4,6,7])
+	sample_mesh = model_to_mesh(mdl.obj_model('model.obj'), [-1,-1,-1], [0,0,0])
 
 	cam = obj_camera([0,0,10.0], [0,0,0])
 	while not done:
@@ -108,7 +92,7 @@ def main_loop():
 		sample_mesh.rot[0] += 0.01
 		sample_mesh.rot[1] += 0.01
 		events(global_eventsq)
-		clock.tick(60)
+		fnd.clock.tick(60)
 
 fnd.initialise()
 main_loop()

@@ -58,7 +58,7 @@ def render3d(camera, meshes):
 			fnd.draw_efficient_line(int(ptA[0]), int(ptA[1]), int(ptB[0]), int(ptB[1]))
 			fnd.draw_efficient_line(int(ptB[0]), int(ptB[1]), int(ptC[0]), int(ptC[1]))
 			fnd.draw_efficient_line(int(ptC[0]), int(ptC[1]), int(ptA[0]), int(ptA[1]))
-	fnd.text(str(int(fnd.clock.get_fps())), 0, 0, 255, 255, 0)
+	fnd.text(str(int(fnd.clock.get_fps())) + ' FPS', 0, 0, 255, 255, 0)
 	fnd.output_flush()
 
 def add_event(frequency, func):
@@ -81,7 +81,7 @@ def events(eventseq):
 def main_loop():
 	global global_screen
 	done = False
-	sample_mesh = model_to_mesh(mdl.obj_model('model.obj'), [-1,-1,-1], [0,0,0])
+	sample_mesh = model_to_mesh(mdl.obj_model('./data/model.obj'), [-1,-1,-1], [0,0,0])
 
 	cam = obj_camera([0,0,10.0], [0,0,0])
 	while not done:

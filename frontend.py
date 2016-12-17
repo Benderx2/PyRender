@@ -11,7 +11,7 @@ def initialise():
 	pygame.init()
 	global_screen = pygame.display.set_mode((SCRN_WIDTH, SCRN_HEIGHT))
 	pygame.display.set_caption("PyRender Window")
-	global_font = pygame.font.SysFont("VeraMono.ttf", 15)
+	global_font = pygame.font.SysFont("./data/VeraMono.ttf", 30)
 	clock = pygame.time.Clock()
 
 def putpixel(x, y, r, g, b):

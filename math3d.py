@@ -17,27 +17,24 @@ def normalize(vec3):
  
 def trans_coordinate(coord, transmat):
 	vec4 = [0.0,0.0,0,0]
-	vec4[0] = coord[0] * transmat.item((0,0)) + (coord[1] * transmat.item((1,0))) + (coord[2] * transmat.item((2,0))) +  transmat.item((3,0))
-	vec4[1] = coord[0] * transmat.item((0,1)) + (coord[1] * transmat.item((1,1))) + (coord[2] * transmat.item((2,1))) +  transmat.item((3,1))
-	vec4[2] = coord[0] * transmat.item((0,2)) + (coord[1] * transmat.item((1,2))) + (coord[2] * transmat.item((2,2))) +  transmat.item((3,2))
-	vec4[3] = 1.0 / (coord[0] * transmat.item((0,3)) + (coord[1] * transmat.item((1,3))) + (coord[2] * transmat.item((2,3))) +  transmat.item((3,3)))
+	c0, c1, c2 = coord
+	vec4[0] = c0 * transmat.item((0,0)) + (c1 * transmat.item((1,0))) + (c2 * transmat.item((2,0))) +  transmat.item((3,0))
+	vec4[1] = c0 * transmat.item((0,1)) + (c1 * transmat.item((1,1))) + (c2 * transmat.item((2,1))) +  transmat.item((3,1))
+	vec4[2] = c0 * transmat.item((0,2)) + (c1 * transmat.item((1,2))) + (c2 * transmat.item((2,2))) +  transmat.item((3,2))
+	vec4[3] = 1.0 / (c0 * transmat.item((0,3)) + (c1 * transmat.item((1,3))) + (c2 * transmat.item((2,3))) +  transmat.item((3,3)))
 	return [vec4[0]*vec4[3], vec4[1]*vec4[3], vec4[2]*vec4[3]]
 
 
 def project(coord, transmat, width, height):
 	pt = trans_coordinate(coord, transmat)
-	x = pt[0] * width + width / 2.0
-	y = -pt[1] * height + height / 2.0
-	return [x,y]
+	return [pt[0] * width + width / 2.0,-pt[1] * height + height / 2.0]
 
 def lookAtLH(eye, target, up):
 	xaxis = [0.0,0,0]
 	yaxis = [0.0,0,0]
 	zaxis = [0.0,0,0]
-	zaxis = np.subtract(target, eye)
-	zaxis = normalize(zaxis)
-	xaxis = np.cross(up, zaxis)
-	xaxis = normalize(xaxis)
+	zaxis = normalize(np.subtract(target, eye))
+	xaxis = normalize(np.cross(up, zaxis))
 	yaxis = np.cross(zaxis, xaxis)
 	mat = np.matrix([[1.0, 0, 0, 0],
 					[0, 1.0, 0, 0],
@@ -90,13 +87,8 @@ def rotYawPitchRoll(yaw, pitch, roll):
 	sinroll = math.sin(halfroll)
 	cosroll = math.cos(halfroll)
 
-	vec4 = [0.0,0.0,0.0,0.0]
-	vec4[0] = (cosyaw * sinpitch * cosroll) + (sinyaw * cospitch * sinroll)
-	vec4[1] = (sinyaw * cospitch * cosroll) - (cosyaw * sinpitch * sinroll)
-	vec4[2] = (cosyaw * cospitch * sinroll) - (sinyaw * sinpitch * cosroll)
-	vec4[3] = (cosyaw * cospitch * cosroll) + (sinyaw * sinpitch * sinroll)
-
-	return vec4
+	# Return vec4
+	return [(cosyaw * sinpitch * cosroll) + (sinyaw * cospitch * sinroll), (sinyaw * cospitch * cosroll) - (cosyaw * sinpitch * sinroll), (cosyaw * cospitch * sinroll) - (sinyaw * sinpitch * cosroll), (cosyaw * cospitch * cosroll) + (sinyaw * sinpitch * sinroll)]
 
 def rotvec4tomat(vec4):
 	xx = vec4[0]*vec4[0]

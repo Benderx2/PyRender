@@ -63,3 +63,7 @@ def draw_efficient_line(x1, y1, x2, y2):
 		if(err2 < dx):
 			err += dx
 			ny1 += inc_y
+
+def draw_triangle(A, B, C):
+	global global_screen
+	pygame.draw.polygon(global_screen, [0, 250, 0], [[int(A[0]), int(A[1])], [int(B[0]), int(B[1])], [int(C[0]), int(C[1])]], 1)

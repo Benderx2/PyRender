@@ -50,14 +50,12 @@ def render3d(camera, meshes):
 	for i in range(0, len(meshes)):
 		worldmat = m3d.rotmatrix(meshes[i].rot[1], meshes[i].rot[0], meshes[i].rot[2]) * m3d.translation(meshes[i].pos[0], meshes[i].pos[1], meshes[i].pos[2])
 		transmat = worldmat * viewmat * projmat
-		for j in range(0, len(meshes[i].faces)):
+		for j in range(0, len(meshes[i].faces)-1):
 			ptA = m3d.project(meshes[i].vertices[meshes[i].faces[j][0]], transmat, fnd.SCRN_WIDTH, fnd.SCRN_HEIGHT)
 			ptB = m3d.project(meshes[i].vertices[meshes[i].faces[j][1]], transmat, fnd.SCRN_WIDTH, fnd.SCRN_HEIGHT)
 			ptC = m3d.project(meshes[i].vertices[meshes[i].faces[j][2]], transmat, fnd.SCRN_WIDTH, fnd.SCRN_HEIGHT)
 			# Draw a triangle ABC
-			fnd.draw_efficient_line(int(ptA[0]), int(ptA[1]), int(ptB[0]), int(ptB[1]))
-			fnd.draw_efficient_line(int(ptB[0]), int(ptB[1]), int(ptC[0]), int(ptC[1]))
-			fnd.draw_efficient_line(int(ptC[0]), int(ptC[1]), int(ptA[0]), int(ptA[1]))
+			fnd.draw_triangle(ptA, ptB, ptC)
 	fnd.text(str(int(fnd.clock.get_fps())) + ' FPS', 0, 0, 255, 255, 0)
 	fnd.output_flush()
 
@@ -81,16 +79,17 @@ def events(eventseq):
 def main_loop():
 	global global_screen
 	done = False
-	sample_mesh = model_to_mesh(mdl.obj_model('./data/model.obj'), [-1,-1,-1], [0,0,0])
+	sample_mesh = model_to_mesh(mdl.obj_model('./data/model.obj'), [0,0,0], [3,0,0])
 
-	cam = obj_camera([0,0,10.0], [0,0,0])
+	cam = obj_camera([0,0,15.0], [0,0,0])
 	while not done:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				done = True
 		render3d(cam, [sample_mesh])
-		sample_mesh.rot[0] += 0.01
-		sample_mesh.rot[1] += 0.01
+		#sample_mesh.rot[0] += 0.01
+		sample_mesh.rot[1] -= 0.05
+		#sample_mesh.rot[2] += 0.01
 		events(global_eventsq)
 		fnd.clock.tick(60)
 
